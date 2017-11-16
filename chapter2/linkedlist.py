@@ -52,6 +52,66 @@ class LinkedList:
             n = n.next
 
 
+    # Trivially easy version
+    def get_k_last(self, k):
+        # Get length of list
+        length = 0
+        n = self.head
+        while n:
+            length += 1
+            n = n.next
+
+        if k >= length:
+            return None
+
+        n = self.head
+        for i in range(length - 1 - k):
+            n = n.next
+
+        return n
+
+    # Harder version, not allowed to explicitly calculate list length
+    # Use 2 pointers - one counts for k, then move the trailing pointer
+    # until forward pointer hits end of list.
+    # Definition operates as: 
+    #   0th last = last element, 1st last = second to last element
+    def get_k_last_hard(self, k):
+        k_n = self.head
+        item_n = self.head
+
+        i = 0
+        while k_n and i < k:
+            k_n = k_n.next
+            i += 1
+
+        if not k_n:
+            return None
+
+        while k_n.next:
+            k_n = k_n.next
+            item_n = item_n.next
+
+        return item_n
+
+
+    def delete_middle_node(self, del_node):
+        n = self.head
+        prev = None
+        while n and n != del_node:
+            prev = n
+            n = n.next
+
+        # Error, deleting first or last node
+        if not prev or not n:
+            return None
+
+        # Delete the node
+        # Explicit deleting not pythonic
+        prev.next = n.next
+
+
+
+
 def iterate_aggregate(ll):
     n = ll.head
     agg = []
@@ -72,6 +132,34 @@ def check_2_1_2(ll):
     assert iterate_aggregate(ll) == [1, 2, 3, 4, 5]
 
 
+def check_2_2_1(ll):
+    assert ll.get_k_last(0).data == 5
+    assert ll.get_k_last(1).data == 4
+    assert ll.get_k_last(2).data == 3
+    assert ll.get_k_last(3).data == 2
+    assert ll.get_k_last(4).data == 1
+    assert ll.get_k_last(5) == None
+    assert ll.get_k_last(6) == None
+
+
+def check_2_2_2(ll):
+    assert ll.get_k_last_hard(0).data == 5
+    assert ll.get_k_last_hard(1).data == 4
+    assert ll.get_k_last_hard(2).data == 3
+    assert ll.get_k_last_hard(3).data == 2
+    assert ll.get_k_last_hard(4).data == 1
+    assert ll.get_k_last_hard(5) == None
+    assert ll.get_k_last_hard(6) == None
+
+
+def check_2_3(ll):
+    node = ll.get_k_last(3)
+    ll.delete_middle_node(node)
+    assert iterate_aggregate(ll) == [1, 3, 4, 5]
+    assert ll.delete_middle_node(0) == None
+    assert ll.delete_middle_node(4) == None
+
+
 def create_linkedlist():
     ll = LinkedList(1)
     ll.append(2)
@@ -87,12 +175,19 @@ def create_linkedlist():
 
 if __name__ == '__main__':
     ll = create_linkedlist()
-
-    # 2.1 check
+    # 2.1 checks
     check_2_1_1(ll)
-
     ll = create_linkedlist()
     check_2_1_2(ll)
+
+    # 2.2 check
+    check_2_2_1(ll)
+    check_2_2_2(ll)
+
+    # 2.3 check
+    check_2_3(ll)
+
+
 
 
 
