@@ -13,6 +13,10 @@ class LinkedList:
 
     def append(self, d):
         n = self.head
+        if not n.data:
+            n.data = d
+            return
+
         while n.next:
             n = n.next
 
@@ -104,6 +108,30 @@ class LinkedList:
         del_node.data = next_n.data
         del_node.next = next_n.next
 
+    # The description in the book is a little confusing, but I think this is a proper
+    # implementation.
+    def partition(self, value):
+        n = self.head
+        less_list = LinkedList(None)
+        more_list = LinkedList(None)
+        while n:
+            if n.data < value:
+                less_list.append(n.data)
+            else:
+                more_list.append(n.data)
+
+            n = n.next
+
+
+        # Concatenate less_list and more_list
+        # and update self
+        n_less = less_list.head
+        while n_less.next:
+            n_less = n_less.next
+
+        n_less.next = more_list.head
+
+        self.head = less_list.head
 
 
 
@@ -154,6 +182,11 @@ def check_2_3(ll):
     assert iterate_aggregate(ll) == [1, 3, 4, 5]
 
 
+def check_2_4(ll):
+    ll.partition(3)
+    assert iterate_aggregate(ll) == [1, 2, 5, 3, 6, 4]
+
+
 def create_linkedlist():
     ll = LinkedList(1)
     ll.append(2)
@@ -166,6 +199,17 @@ def create_linkedlist():
     ll.append(5)
 
     return ll
+
+def create_unordered_linkedlist():
+    ll = LinkedList(1)
+    ll.append(5)
+    ll.append(3)
+    ll.append(6)
+    ll.append(2)
+    ll.append(4)
+
+    return ll
+
 
 if __name__ == '__main__':
     ll = create_linkedlist()
@@ -180,6 +224,10 @@ if __name__ == '__main__':
 
     # 2.3 check
     check_2_3(ll)
+
+    # 2.4 check
+    ll = create_unordered_linkedlist()
+    check_2_4(ll)
 
 
 
