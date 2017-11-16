@@ -22,6 +22,15 @@ class LinkedList:
 
         n.next = ListNode(d)
 
+
+    def append_node(self, new_n):
+        n = self.head
+        
+        while n.next:
+            n = n.next
+
+        n.next = new_n
+
     # 2.1 with buffer
     def remove_duplicates_wbuffer(self):
         buf = {}
@@ -193,6 +202,20 @@ class LinkedList:
 
         return True
 
+# Check if there's ever a cross reference
+# Lists that intersect eventually hit the same node
+def are_intersecting(ll1, ll2):
+    n1, n2 = ll1.head, ll2.head
+
+    while n1 and n2:
+        if n1 == n2:
+            return True
+
+        n1, n2 = n1.next, n2.next
+
+    return False
+
+
 
 def iterate_aggregate(ll):
     n = ll.head
@@ -259,6 +282,10 @@ def check_2_6(ll):
     assert not ll.is_palindrome()
 
 
+def check_2_7(ll1, ll2):
+    assert are_intersecting(ll1, ll2)
+    assert not are_intersecting(create_linkedlist(), create_linkedlist())
+
 
 def create_linkedlist():
     ll = LinkedList(1)
@@ -273,6 +300,7 @@ def create_linkedlist():
 
     return ll
 
+
 def create_unordered_linkedlist():
     ll = LinkedList(1)
     ll.append(5)
@@ -282,6 +310,20 @@ def create_unordered_linkedlist():
     ll.append(4)
 
     return ll
+
+
+def create_intersecting_linkedlists():
+    ll1 = LinkedList(1)
+    ll1.append(2)
+    ll1.append(3)
+    ll1.append(4)
+    ll1.append(5)
+    ll2 = LinkedList('a')
+    ll2.append('b')
+    ll2.append('c')
+    ll2.append_node(ll1.get_k_last(1))
+
+    return ll1, ll2
 
 
 if __name__ == '__main__':
@@ -322,6 +364,9 @@ if __name__ == '__main__':
 
     check_2_6(ll)
 
+
+    ll1, ll2 = create_intersecting_linkedlists()
+    check_2_7(ll1, ll2)
 
 
 
