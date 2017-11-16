@@ -134,6 +134,53 @@ class LinkedList:
         self.head = less_list.head
 
 
+    # Assuming it's 2, 3 digit numbers
+    def sum_list_reverse(self):
+        first_num_n = self.head
+        second_num_n = self.get_k_last(2)
+        ret_list = LinkedList(None)
+
+        carry = 0
+        for i in range(3):
+            value = (first_num_n.data + second_num_n.data + carry) % 10
+            carry = (first_num_n.data + second_num_n.data) // 10
+            ret_list.append(value)
+
+            first_num_n = first_num_n.next
+            second_num_n = second_num_n.next
+
+        if carry > 0:
+            ret_list.append(carry)
+
+        return ret_list
+
+
+    # Multiple methods to do this - can reverse the elements and then pass
+    # to sum_list_reverse, or do it some other way.
+    # Reversing is the easiest obvious solution, but quite inefficient.
+    def sum_list_forward(self):
+        reverse_list = self.get_reverse_list()
+        sum_list = reverse_list.sum_list_reverse()
+
+        return sum_list.get_reverse_list()
+
+
+
+    def get_reverse_list(self):
+        reverse_list = LinkedList(None)
+        n = self.head
+        i = 0
+        while n:
+            reverse_list.append(self.get_k_last(i).data)
+            n = n.next
+            i += 1
+
+        return reverse_list
+
+
+
+
+
 
 
 def iterate_aggregate(ll):
@@ -187,6 +234,14 @@ def check_2_4(ll):
     assert iterate_aggregate(ll) == [1, 2, 5, 3, 6, 4]
 
 
+def check_2_5_1(ll):
+    assert iterate_aggregate(ll.sum_list_reverse()) == [5, 8, 7]
+
+
+def check_2_5_2(ll):
+    assert iterate_aggregate(ll.sum_list_forward()) == [1, 5, 7, 7]
+
+
 def create_linkedlist():
     ll = LinkedList(1)
     ll.append(2)
@@ -228,6 +283,16 @@ if __name__ == '__main__':
     # 2.4 check
     ll = create_unordered_linkedlist()
     check_2_4(ll)
+
+    # 2.5 check
+    ll = LinkedList(9)
+    ll.append(5)
+    ll.append(3)
+    ll.append(6)
+    ll.append(2)
+    ll.append(4)
+    check_2_5_1(ll)
+    check_2_5_2(ll)
 
 
 
