@@ -202,18 +202,47 @@ class LinkedList:
 
         return True
 
-# Check if there's ever a cross reference
-# Lists that intersect eventually hit the same node
-def are_intersecting(ll1, ll2):
+
+def get_cut_list(l, len):
+    n = l.head
+    for i in range(len):
+        n = n.next
+
+    return n
+
+
+# If two lists end in same node, they're intersecting.
+# To get the intersection, get the lengths of both lists,
+# "cut" the longer one to be the size of the shorter, then
+# go node by node
+def get_intersection(ll1, ll2):
     n1, n2 = ll1.head, ll2.head
+    ll1_len, ll2_len = 0, 0
 
-    while n1 and n2:
-        if n1 == n2:
-            return True
+    while n1:
+        n1 = n1.next
+        ll1_len += 1
 
-        n1, n2 = n1.next, n2.next
+    while n2:
+        n2 = n2.next
+        ll2_len += 1
 
-    return False
+    if n1 == n2:
+        n1, n2 = ll1.head, ll2.head
+        if ll1_len < ll2_len:
+            n2 = get_cut_list(ll2, ll2_len - ll1_len)
+        elif ll1_len > ll2_len:
+            n1 = get_cut_list(ll1, ll1_len - ll2_len)
+
+        while n1 and n2:
+            if n1 == n2:
+                return n1
+
+            n1, n2 = n1.next, n2.next
+
+    else:
+        return None
+
 
 
 
@@ -283,8 +312,10 @@ def check_2_6(ll):
 
 
 def check_2_7(ll1, ll2):
-    assert are_intersecting(ll1, ll2)
-    assert not are_intersecting(create_linkedlist(), create_linkedlist())
+    assert get_intersection(ll1, ll2)
+    assert not get_intersection(create_linkedlist(), create_linkedlist())
+    ll1.delete_middle_node(ll1.get_k_last(1))
+    assert get_intersection(ll1, ll2)
 
 
 def create_linkedlist():
