@@ -246,6 +246,10 @@ def get_intersection(ll1, ll2):
 
 # This is a less mathy (and less efficient)
 # way of solving this problem.
+# The better version is realizing that when fast and slow meet,
+# they are k steps away from the loop start point, where k is the
+# distance from head to the loop start point.
+# So, just set slow = head, and walk slow and fast together until they meet.
 def get_loop_start(ll):
     # First: loop detection
     fast_n, slow_n = ll.head, ll.head
