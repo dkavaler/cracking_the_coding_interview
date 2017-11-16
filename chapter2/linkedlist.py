@@ -158,6 +158,7 @@ class LinkedList:
     # Multiple methods to do this - can reverse the elements and then pass
     # to sum_list_reverse, or do it some other way.
     # Reversing is the easiest obvious solution, but quite inefficient.
+    # Can also run through, make a temp list copy, etc, should be O(N)
     def sum_list_forward(self):
         reverse_list = self.get_reverse_list()
         sum_list = reverse_list.sum_list_reverse()
@@ -177,10 +178,20 @@ class LinkedList:
 
         return reverse_list
 
+    # Reverse it, check equality
+    def is_palindrome(self):
+        reverse_list = self.get_reverse_list()
+        n1 = self.head
+        n2 = reverse_list.head
 
+        while n1 and n2:
+            if n1.data != n2.data:
+                return False
+            
+            n1 = n1.next
+            n2 = n2.next
 
-
-
+        return True
 
 
 def iterate_aggregate(ll):
@@ -242,6 +253,13 @@ def check_2_5_2(ll):
     assert iterate_aggregate(ll.sum_list_forward()) == [1, 5, 7, 7]
 
 
+def check_2_6(ll):
+    assert ll.is_palindrome()
+    ll.delete_middle_node(ll.get_k_last(2))
+    assert not ll.is_palindrome()
+
+
+
 def create_linkedlist():
     ll = LinkedList(1)
     ll.append(2)
@@ -293,6 +311,16 @@ if __name__ == '__main__':
     ll.append(4)
     check_2_5_1(ll)
     check_2_5_2(ll)
+
+    ll = LinkedList('a')
+    ll.append('b')
+    ll.append('c')
+    ll.append('d')
+    ll.append('c')
+    ll.append('b')
+    ll.append('a')
+
+    check_2_6(ll)
 
 
 
