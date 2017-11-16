@@ -203,8 +203,8 @@ class LinkedList:
         return True
 
 
-def get_cut_list(l, len):
-    n = l.head
+def get_cut_list(ll, len):
+    n = ll.head
     for i in range(len):
         n = n.next
 
@@ -243,6 +243,36 @@ def get_intersection(ll1, ll2):
     else:
         return None
 
+
+# This is a less mathy (and less efficient)
+# way of solving this problem.
+def get_loop_start(ll):
+    # First: loop detection
+    fast_n, slow_n = ll.head, ll.head
+    detected = False
+    # If there's a loop, eventually fast_n and slow_n will meet
+    # If not, then we terminate the loop without setting detected = True
+    while fast_n.next and slow_n:
+        slow_n = slow_n.next
+        fast_n = fast_n.next.next
+        if slow_n == fast_n:
+            detected = True
+            break
+
+    if not detected:
+        return None
+
+
+    # Now, walk through, adding nodes (addresses) to a hash table.
+    # When we get a mapped hash, we know we got the loop start
+    visited_d = {}
+    n = ll.head
+    while n:
+        if n in visited_d:
+            return n
+
+        visited_d[n] = True
+        n = n.next
 
 
 
@@ -318,6 +348,14 @@ def check_2_7(ll1, ll2):
     assert get_intersection(ll1, ll2)
 
 
+def check_2_8():
+    ll, check_n = create_looped_linkedlist()
+    assert get_loop_start(ll) == check_n
+    ll, check_n = create_midlooped_linkedlist()
+    assert get_loop_start(ll) == check_n
+
+
+
 def create_linkedlist():
     ll = LinkedList(1)
     ll.append(2)
@@ -355,6 +393,39 @@ def create_intersecting_linkedlists():
     ll2.append_node(ll1.get_k_last(1))
 
     return ll1, ll2
+
+
+def create_looped_linkedlist():
+    ll = LinkedList(1)
+    ll.append(2)
+    ll.append(3)
+    ll.append(4)
+    ll.append(5)
+
+    n = ll.head
+    while n.next:
+        n = n.next
+
+    n.next = ll.head
+
+    return ll, ll.head
+
+
+def create_midlooped_linkedlist():
+    ll = LinkedList(1)
+    ll.append(2)
+    ll.append(3)
+    ll.append(4)
+    ll.append(5)
+
+    n = ll.head
+    while n.next:
+        n = n.next
+
+    n.next = ll.get_k_last(2)
+
+    return ll, n.next
+
 
 
 if __name__ == '__main__':
@@ -398,6 +469,9 @@ if __name__ == '__main__':
 
     ll1, ll2 = create_intersecting_linkedlists()
     check_2_7(ll1, ll2)
+
+    check_2_8()
+
 
 
 
