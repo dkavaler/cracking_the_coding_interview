@@ -94,20 +94,16 @@ class LinkedList:
         return item_n
 
 
+    # Not allowed to use head, only del_node
     def delete_middle_node(self, del_node):
-        n = self.head
-        prev = None
-        while n and n != del_node:
-            prev = n
-            n = n.next
+        next_n = del_node.next
+        # Deleting from end of list, not allowed
+        if not next_n:
+            return -1
 
-        # Error, deleting first or last node
-        if not prev or not n:
-            return None
+        del_node.data = next_n.data
+        del_node.next = next_n.next
 
-        # Delete the node
-        # Explicit deleting not pythonic
-        prev.next = n.next
 
 
 
@@ -156,8 +152,6 @@ def check_2_3(ll):
     node = ll.get_k_last(3)
     ll.delete_middle_node(node)
     assert iterate_aggregate(ll) == [1, 3, 4, 5]
-    assert ll.delete_middle_node(0) == None
-    assert ll.delete_middle_node(4) == None
 
 
 def create_linkedlist():
