@@ -4,6 +4,7 @@ class Node:
         self.name = name
         self.data = data
         self.children = []
+        self.parent = None
 
 
     def is_full(self, full_len):
@@ -34,9 +35,12 @@ class Node:
         if lc:
             lc.inorder_print_binary()
         print(self.data)
+        if self.parent:
+            print('Parent', self.parent.data)
         rc = self.get_child(1)
         if rc:
             rc.inorder_print_binary()
+
 
 # Recursive method (much faster)
 def create_bst(arr):
