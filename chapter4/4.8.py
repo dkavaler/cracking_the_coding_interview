@@ -132,11 +132,6 @@ class BinaryTree:
         for node in reversed(level_order):
             if node1 in self.bfs(node) and node2 in self.bfs(node):
                 return node
-        
-        
-
-
-        
 
 
 if __name__ == '__main__':
